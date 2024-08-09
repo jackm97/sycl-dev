@@ -18,7 +18,7 @@ RUN ~/.pixi/bin/pixi run install
 
 
 FROM scratch as acpp-base
-COPY --from=acpp-build /etc/user-init-scripts/profile.d/50-setup-user.sh /etc/user-init-scripts/profile.d/50-setup-user.sh
+COPY --from=acpp-build /etc/user-init-scripts /etc/user-init-scripts
 COPY --from=acpp-build /etc/project-manifests /etc/project-manifests
 COPY --from=acpp-build /usr/local/acpp /usr/local/acpp
 
