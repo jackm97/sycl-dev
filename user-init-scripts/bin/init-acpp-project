@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+set -x
+
+PROJECT_DIR="${*: -1}"
+
+if [ ! -f "$PROJECT_DIR/pixi.toml" ]; then
+
+  mkdir -p "${*: -1}"
+
+  cp /etc/project-manifests/acpp-project/pixi.toml "$PROJECT_DIR/pixi.toml"
+
+else
+  echo "Project manifest exists, skipping manifest creation."
+fi
+
+pixi install --manifest-path "$PROJECT_DIR"/pixi.toml
+
+if [ ! -f "$PROJECT_DIR/CMakeLists.txt" ]; then
+  pixi run --manifest-path "$PROJECT_DIR"/pixi.toml cmake-init --overwrite "$@"
+fi

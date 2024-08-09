@@ -1,5 +1,11 @@
 FROM ghcr.io/jackm97/my-nvim-ide:rocky-latest as acpp-build
 
+COPY user-init-scripts /tmp/user-init-scripts
+RUN cp -r /tmp/user-init-scripts/. /etc/user-init-scripts/
+RUN find /etc/user-init-scripts -type f -wholename "/etc/user-init-scripts/*" | xargs chmod +x
+RUN mkdir /etc/profile.d.links -p
+RUN find /etc/user-init-scripts -type f -wholename "/etc/user-init-scripts/profile.d/*" | xargs -I'{}' ln -sf '{}' /etc/profile.d.links
+
 RUN touch ~/.container_user_is_init
 RUN touch ~/.bashrc 
 RUN bash --rcfile ~/.bashrc --noprofile -i /etc/user-init-scripts/install_pixi.sh
@@ -18,9 +24,9 @@ RUN ~/.pixi/bin/pixi run install
 
 
 FROM scratch as acpp-base
-COPY --from=acpp-build /etc/user-init-scripts /etc/user-init-scripts
-COPY --from=acpp-build /etc/project-manifests /etc/project-manifests
+COPY --from=acpp-build /etc/project-manifests/acpp-project /etc/project-manifests/acpp-project
 COPY --from=acpp-build /usr/local/acpp /usr/local/acpp
+COPY --from=acpp-build /etc/profile.d.links/. /etc/profile.d/
 
 FROM ghcr.io/jackm97/my-nvim-ide:rocky-latest as sycl-dev:acpp-rocky
 COPY --from=acpp-base / /
