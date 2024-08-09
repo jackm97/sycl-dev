@@ -27,6 +27,7 @@ FROM scratch as acpp-base
 COPY --from=acpp-build /etc/project-manifests/acpp-project /etc/project-manifests/acpp-project
 COPY --from=acpp-build /usr/local/acpp /usr/local/acpp
 COPY --from=acpp-build /etc/profile.d.links/. /etc/profile.d/
+COPY --from=acpp-build /etc/user-init-scripts /etc/user-init-scripts
 
 FROM ghcr.io/jackm97/my-nvim-ide:rocky-latest as sycl-dev:acpp-rocky
 COPY --from=acpp-base / /
