@@ -8,7 +8,7 @@ RUN find /etc/user-init-scripts -type f -wholename "/etc/user-init-scripts/profi
 
 RUN touch ~/.container_user_is_init
 RUN touch ~/.bashrc 
-RUN bash --rcfile ~/.bashrc --noprofile -i /etc/user-init-scripts/install_pixi.sh
+RUN curl -fsSL https://pixi.sh/install.sh | bash
 
 VOLUME /build
 RUN git clone https://github.com/AdaptiveCpp/AdaptiveCpp.git /build/acpp 
